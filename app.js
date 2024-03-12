@@ -241,7 +241,8 @@ const GOOGLE_CLIENT_SECRET = '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';
 passport.use(new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: '/auth/google/callback',
+//   callbackURL: '/auth/google/callback',
+  callbackURL: 'https://inventory-simple.vercel.app/auth/google/callback',
 //   callbackURL: 'http://localhost:3000/auth/google/callback',
 }, (accessToken, refreshToken, profile, done) => {
     const allowedEmails = ['rs4093@gmail.com'];
