@@ -9,10 +9,10 @@ const app = express();
 
 // MySQL Connection
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'inventory_management',
+  host: 'b14y8z2geenrzmxbddpk-mysql.services.clever-cloud.com',
+  user: 'uacbfalxyvgscd9z',
+  password: '8R0sDz3z6nRDY0Kg4Afg',
+  database: 'b14y8z2geenrzmxbddpk',
 });
 
 db.connect((err) => {
@@ -254,7 +254,7 @@ app.get('/auth/google/callback',
 
   
 // Start the server
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 // app.listen(PORT, () => {
 //   console.log(`Server is running on port ${PORT}`);
 // });
