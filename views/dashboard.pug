@@ -1,0 +1,99 @@
+extends layout
+
+block content
+  h1 Dashboard
+
+  // Include Chart.js library
+  script(src='https://cdn.jsdelivr.net/npm/chart.js')
+
+  // Daily Sells Chart
+  canvas#dailySellsChart(width='400' height='200')
+  script.
+    var dailySellsData = !{dailySellsData};
+    var dailySellsChart = new Chart(document.getElementById('dailySellsChart'), {
+      type: 'bar',
+      data: {
+        labels: dailySellsData.labels,
+        datasets: [{
+          label: 'Daily Sells Quantity',
+          data: dailySellsData.data,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+  // Monthly Sells Chart
+  canvas#monthlySellsChart(width='400' height='200')
+  script.
+    var monthlySellsData = !{monthlySellsData};
+    var monthlySellsChart = new Chart(document.getElementById('monthlySellsChart'), {
+      type: 'bar',
+      data: {
+        labels: monthlySellsData.labels,
+        datasets: [{
+          label: 'Monthly Sells Quantity',
+          data: monthlySellsData.data,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+  // Yearly Sells Chart
+  canvas#yearlySellsChart(width='400' height='200')
+  script.
+    var yearlySellsData = !{yearlySellsData};
+    var yearlySellsChart = new Chart(document.getElementById('yearlySellsChart'), {
+      type: 'bar',
+      data: {
+        labels: yearlySellsData.labels,
+        datasets: [{
+          label: 'Yearly Sells Quantity',
+          data: yearlySellsData.data,
+          backgroundColor: 'rgba(255, 205, 86, 0.2)',
+          borderColor: 'rgba(255, 205, 86, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+  // Buys Chart
+  canvas#buysChart(width='400' height='200')
+  script.
+    var buysData = !{buysData};
+    var buysChart = new Chart(document.getElementById('buysChart'), {
+      type: 'bar',
+      data: {
+        labels: buysData.labels,
+        datasets: [{
+          label: 'Buys Quantity',
+          data: buysData.data,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });

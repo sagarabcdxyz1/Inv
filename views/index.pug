@@ -1,0 +1,102 @@
+//- views/index.pug
+extends layout
+
+block content
+  h2.text-center Products
+
+  table#productsTable.table.table-bordered.table-hover
+    thead
+      tr
+        th Name
+        th Price
+        th Quantity in Stock
+        th Actions
+    tbody
+      each product in products
+        tr
+          td= product.name
+          td= product.price.toFixed(2)
+          td= product.stock
+          td
+            button.btn.btn-success(
+              type='button',
+              data-bs-toggle='modal',
+              data-bs-target='#buyModal',
+              data-action='buy',
+              data-product-id=product.id,
+              data-product-name=product.name,
+              data-product-price=product.price.toFixed(2),
+              data-product-stock=product.stock
+            ) Buy
+            button.btn.btn-danger(
+              type='button',
+              data-bs-toggle='modal',
+              data-bs-target='#sellModal',
+              data-action='sell',
+              data-product-id=product.id,
+              data-product-name=product.name,
+              data-product-stock=product.stock
+            ) Sell
+
+  //- Buy Modal
+  #buyModal.modal
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title
+            | Buy Product: #{productName}
+          button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+
+        .modal-body
+          form(action='/add-inventory', method='POST')
+            input(type='hidden', name='productId', id='buyProductId', value='')
+            div.mb-3.d-flex.align-items-center
+              label(for='productName', class='me-2') Product Name:
+              input#productName.form-control(type='text', readonly)
+            div.mb-3.d-flex.align-items-center
+              label(for='basePrice', class='me-2') Base Price:
+              input#basePrice.form-control(type='text', readonly)
+            div.mb-3.d-flex.align-items-center
+              label(for='availableStock', class='me-2') Available Stock:
+              input#availableStock.form-control(type='text', readonly)
+            div.mb-3.d-flex.align-items-center
+              label(for='quantityBuy', class='me-2') Quantity to Buy:
+              input#quantityBuy.form-control(type='number', name='quantity', required, oninput='calculateTotal("buy")')
+            div.mb-3.d-flex.align-items-center
+              label(for='priceBuy', class='me-2') Price per Unit:
+              input#priceBuy.form-control(type='number', name='price', required, oninput='calculateTotal("buy")')
+            div.mb-3.d-flex.align-items-center
+              label(for='totalBuy', class='me-2') Total:
+              input#totalBuy.form-control(type='text', readonly)
+            div.mb-3
+              button.btn.btn-primary(type='submit') Confirm Buy
+
+  //- Sell Modal
+  #sellModal.modal
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title
+            | Sell Product: #{productName}
+          button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+
+        .modal-body
+          form(action='/sell-inventory', method='POST')
+            input(type='hidden', name='productId', id='sellProductId', value='')
+            div.mb-3.d-flex.align-items-center
+              label(for='productName', class='me-2') Product Name:
+              input#productName.form-control(type='text', readonly)
+            div.mb-3.d-flex.align-items-center
+              label(for='availableStock', class='me-2') Available Stock:
+              input#availableStock.form-control(type='text', readonly)
+            div.mb-3.d-flex.align-items-center
+              label(for='quantitySell', class='me-2') Quantity to Sell:
+              input#quantitySell.form-control(type='number', name='quantity', required, oninput='calculateTotalSell()')
+            div.mb-3.d-flex.align-items-center
+              label(for='sellPrice', class='me-2') Sell Price:
+              input#sellPrice.form-control(type='number', name='sellPrice', required, oninput='calculateTotalSell()')
+            div.mb-3.d-flex.align-items-center
+              label(for='totalSell', class='me-2') Total:
+              input#totalSell.form-control(type='text', readonly)
+            div.mb-3
+              button.btn.btn-danger(type='submit') Confirm Sell

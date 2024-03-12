@@ -1,0 +1,129 @@
+//- views/layout.pug
+
+doctype html
+html
+  head
+    title Inventory Management System
+    link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css')
+    link(rel='stylesheet', href='https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css')
+    link(rel='stylesheet', href='/fontawesome/css/all.min.css')
+    link(rel='stylesheet', href='styles/styles.css')
+
+  body
+    header.container-fluid.bg-primary.text-white.py-3
+      h1.text-center Inventory Management System
+      button#sidebarToggle.btn.btn-link.text-white
+        i.fa.fa-bars
+    
+    .container-fluid.mt-3
+      .row.flex-nowrap
+        // Collapsible Sidebar
+        aside#sidebar.col-md-3
+          nav.sidebar
+            ul.nav.flex-column
+              li.nav-item
+                a.nav-link(href='#') Dashboard
+              li.nav-item
+                a.nav-link(href='#') Inventory
+              li.nav-item
+                a.nav-link(href='#') History
+
+        // Content Area
+        main.col-md-9
+          block content
+
+        
+
+    script(src='/jquery/jquery.min.js')
+    script(src='https://cdn.datatables.net/2.0.1/js/dataTables.min.js')
+    script(src='https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.min.js')
+    script(src='/bootstrap/js/bootstrap.bundle.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js')
+    script(src='https://cdn.jsdelivr.net/npm/chart.js')
+    script.
+      document.getElementById('sidebarToggle').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('d-none');
+      });
+
+    script.
+        $(document).ready(function() {
+        $('#productsTable').DataTable();
+        });
+    
+    script.
+        function calculateTotal(action) {
+        const quantityId = action === 'buy' ? 'quantityBuy' : 'quantitySell';
+        const priceId = action === 'buy' ? 'priceBuy' : null;
+        const totalId = action === 'buy' ? 'totalBuy' : null;
+
+        const quantity = parseFloat(document.getElementById(quantityId).value) || 0;
+        const price = action === 'buy' ? (parseFloat(document.getElementById(priceId).value) || 0) : 0;
+
+        const total = quantity * price;
+        document.getElementById(totalId).value = total.toFixed(2);
+        }
+
+        $('#buyModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        const productName = button.data('product-name');
+        const basePrice = button.data('product-price');
+        const availableStock = button.data('product-stock');
+
+        document.getElementById('buyProductId').value = button.data('product-id');
+        document.getElementById('productName').value = productName;
+        document.getElementById('basePrice').value = basePrice;
+        document.getElementById('availableStock').value = availableStock;
+
+        // Reset values on modal open
+        document.getElementById('quantityBuy').value = '';
+        document.getElementById('priceBuy').value = '';
+        document.getElementById('totalBuy').value = '';
+        });
+
+        $('#sellModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        const productName = button.data('product-name');
+        const availableStock = button.data('product-stock');
+
+        document.getElementById('sellProductId').value = button.data('product-id');
+        document.getElementById('productName').value = productName;
+        document.getElementById('availableStock').value = availableStock;
+
+        // Reset values on modal open
+        document.getElementById('quantitySell').value = '';
+        });
+    
+    script.
+        // Populate product details in Sell modal
+        $('#sellModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        const productName = button.data('product-name');
+        const basePrice = button.data('product-price');
+        const availableStock = button.data('product-stock');
+
+        $('#sellModal #productName').val(productName);
+        $('#sellModal #basePrice').val(basePrice);
+        $('#sellModal #availableStock').val(availableStock);
+        });
+
+        // Calculate total in Sell modal
+        function calculateTotalSell() {
+        const quantity = $('#quantitySell').val();
+        const sellPrice = $('#sellPrice').val();
+        const totalSell = (quantity * sellPrice).toFixed(2);
+        $('#totalSell').val(totalSell);
+        }
+
+        $('#quantitySell, #sellPrice').on('input', function () {
+        calculateTotalSell();
+        });
+        
+    if messages
+      each message in messages.success
+        script.
+            toastr.success("#{message}", "Success", { "positionClass": "toast-top-right" });
+
+      each message in messages.error
+        script.
+            toastr.error("#{message}", "Error", { "positionClass": "toast-top-right" });
