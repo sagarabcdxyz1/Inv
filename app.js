@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const flash = require('express-flash');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -23,6 +24,21 @@ db.connect((err) => {
   console.log('Connected to MySQL database');
 });
 
+// Configure session store
+const sessionStore = new MySQLStore({
+    expiration: 86400000, // 1 day
+    createDatabaseTable: true,
+    schema: {
+      tableName: 'sessions',
+      columnNames: {
+        session_id: 'session_id',
+        expires: 'expires',
+        data: 'data',
+      },
+    },
+  }, db.promise());
+
+
 // Pug Configuration
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -31,6 +47,7 @@ app.use(session({
     secret: 'your-secret-key',
     resave: true,
     saveUninitialized: true,
+    store: sessionStore,
   }));
 
 app.use(flash());
@@ -252,7 +269,7 @@ app.get('/auth/google/callback',
 
   
 
-  
+  module.exports = app;
 // Start the server
 // const PORT = process.env.PORT || 3000;
 // app.listen(PORT, () => {
